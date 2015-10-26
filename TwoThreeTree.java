@@ -1,7 +1,17 @@
+import java.awt.Graphics;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import java.awt.Color;
+
 /**
  * @author Mitas Ray
  */
-public class TwoThreeTree {
+public class TwoThreeTree extends JPanel {
+
+	public static int BOX_LENGTH = 30;
+	public static double SCALING_FACTOR = 0.75;
+	public static int START_X_LENGTH = 200;
+	public static int START_Y_LENGTH = 100;
 
 	// If there is only one element in the node, then it will be 
 	// represented as little.
@@ -39,6 +49,8 @@ public class TwoThreeTree {
 			this.upperLinkColor = upperLinkColor;
 		}
 	}
+
+	public TwoThreeTree() {}
 
 	public TwoThreeTree(String little) {
 		this.little = little;
@@ -173,6 +185,69 @@ public class TwoThreeTree {
 		}
 	}
 
+	@Override
+	public void paintComponent(Graphics g) {
+		draw(g, llrbt, 0, 485, 10);
+	}
+
+	private void drawBox(Graphics g, String value, int x, int y) {
+		g.setColor(Color.black);
+		g.drawRect(x, y, BOX_LENGTH, BOX_LENGTH);
+		g.drawString(value, x + (BOX_LENGTH / 3), y + (BOX_LENGTH * 2 / 3));
+	}
+
+	// true = left, false = right
+	// true = black, false = red
+	private int[] drawLine(Graphics g, int x, int y, int depth, boolean isLeft, boolean isBlack) {
+		int xLength = START_X_LENGTH * ((int) Math.pow(SCALING_FACTOR, depth));
+		int yLength = START_Y_LENGTH * ((int) Math.pow(SCALING_FACTOR, depth));
+		if (isBlack) {
+			g.setColor(Color.black);
+		} else {
+			g.setColor(Color.red);
+		}
+		if (isLeft) {
+			xLength *= -1;
+		} else {
+			x += BOX_LENGTH;
+		}
+		y += BOX_LENGTH;
+		g.drawLine(x, y, x + xLength, y + yLength);
+		return new int[]{x + xLength, y + yLength};
+	}
+
+	private void draw(Graphics g, LLRedBlackTree t, int depth, int x, int y) {
+		if (t == null) {
+			return;
+		} else {
+			boolean linkColor;
+			drawBox(g, t.value, x, y);
+			if (t.left != null) {
+				linkColor = t.left.upperLinkColor;
+				int[] coords = drawLine(g, x, y + BOX_LENGTH, depth, true, linkColor);
+				draw(g, t.left, depth + 1, coords[0] - BOX_LENGTH, coords[1]);
+			}
+			if (t.right != null) {
+				linkColor = true;
+				int[] coords = drawLine(g, x + BOX_LENGTH, y + BOX_LENGTH, depth, false, linkColor);
+				draw(g, t.right, depth + 1, coords[0], coords[1]);
+			}
+		}
+	}
+
+	public void draw() {
+		if (llrbt == null) {
+			System.out.println("TwoThreeTree hasn't been converted to LLRedBlackTree yet.");
+			return;
+		} else {
+			JFrame jFrame = new JFrame();
+        	jFrame.add(new TwoThreeTree());
+        	jFrame.setSize(1000, 600);
+        	jFrame.setVisible(true);
+			// draw(llrbt, 0, 485, 10);
+		}
+	}
+
 	public static void testBasicInsertion() {
 		System.out.println("testBasicInsertion");
 		TwoThreeTree t = new TwoThreeTree("M");
@@ -200,8 +275,23 @@ public class TwoThreeTree {
 		t.rbInfix();
 	}
 
+	public static void testDraw() {
+		System.out.println("testDraw");
+		TwoThreeTree t = new TwoThreeTree("M");
+		t.insert("E", "J", "M", "left");
+		t.insert("A", "C", "EJ", "left");
+		t.insert("H", "EJ", "mid");
+		t.insert("L", "EJ", "right");
+		t.insert("R", "M", "right");
+		t.insert("P", "R", "left");
+		t.insert("S", "X", "R", "right");
+		t.convert();
+		t.draw();
+	}
+
 	public static void main(String[] args) {
 		testBasicInsertion();
 		testBasicConversion();
+		testDraw();
 	}
 }
