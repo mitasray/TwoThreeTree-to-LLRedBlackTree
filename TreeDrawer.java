@@ -11,8 +11,9 @@ import java.awt.Color;
 public class TreeDrawer extends JPanel {
 
 	public static int BOX_LENGTH = 30;
-	public static double SCALING_FACTOR = 0.6;
-	public static int START_X_LENGTH = 125;
+	public static double SCALING_FACTOR_Y = 0.6;
+	public static double SCALING_FACTOR_X = 0.4;
+	public static int START_X_LENGTH = 180;
 	public static int START_Y_LENGTH = 80;
 
 	LLRedBlackTree llrbt;
@@ -35,8 +36,8 @@ public class TreeDrawer extends JPanel {
 	// true = left, false = right
 	// true = black, false = red
 	private int[] drawLine(Graphics g, int x, int y, int depth, boolean isLeft, boolean isBlack) {
-		int xLength = (int) (START_X_LENGTH * Math.pow(SCALING_FACTOR, depth));
-		int yLength = (int) (START_Y_LENGTH * Math.pow(SCALING_FACTOR, depth));
+		int xLength = (int) (START_X_LENGTH * Math.pow(SCALING_FACTOR_X, depth));
+		int yLength = (int) (START_Y_LENGTH * Math.pow(SCALING_FACTOR_Y, depth));
 		if (isBlack) {
 			g.setColor(Color.black);
 		} else {
@@ -78,7 +79,7 @@ public class TreeDrawer extends JPanel {
 		} else {
 			JFrame jFrame = new JFrame();
         	jFrame.add(new TreeDrawer(llrbt));
-        	jFrame.setSize(1000, 600);
+        	jFrame.setSize(1000, 500);
         	jFrame.setVisible(true);
 			// draw(llrbt, 0, 485, 10);
 		}
