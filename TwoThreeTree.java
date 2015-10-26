@@ -1,5 +1,7 @@
 // package TwoThreeTree_to_LLRedBlackTree;
 
+import java.util.Scanner;
+
 /**
  * @author Mitas Ray
  */
@@ -149,6 +151,60 @@ public class TwoThreeTree {
 		}
 	}
 
+	public static void userInput() {
+		Scanner s = new Scanner(System.in);
+		String head = "needs to be overriden by one character string";
+		String input = "";
+		while (head.length() != 1 && head.length() != 2) {
+			System.out.print("head of 2-3 tree? ");
+			head = s.next();
+		}
+		TwoThreeTree t;
+		if (head.length() == 1) {
+			t = new TwoThreeTree(head);
+		} else {
+			t = new TwoThreeTree(Character.toString(head.charAt(0)), Character.toString(head.charAt(1)));
+		}
+		while (!input.equals("q") && !input.equals("d")) {
+			System.out.print("(i)nsert, (d)raw, (q)uit? ");
+			input = s.next();
+			if (input.equals("i")) {
+				String value = "needs to be overriden by value";
+				String parent = "needs to be overriden by parent";
+				String direction = "needs to be overriden by direction";
+				while (value.length() != 1 && value.length() != 2) {
+					System.out.print("\tvalue? ");
+					value = s.next();
+				}
+				while (parent.length() != 1 && parent.length() != 2) {
+					System.out.print("\tparent? ");
+					parent = s.next();
+				}
+				while (!direction.equals("l") && !direction.equals("m") && !direction.equals("r")) {
+					System.out.print("\tdirection: (l)eft, (m)id, (r)ight? ");
+					direction = s.next();
+				}
+				if (direction.equals("l")) direction = "left";
+				if (direction.equals("m")) direction = "mid";
+				if (direction.equals("r")) direction = "right";
+				if (value.length() == 1) {
+					t.insert(value, parent, direction);
+				} else {
+					t.insert(Character.toString(value.charAt(0)), Character.toString(value.charAt(1)), parent, direction);
+				}
+			} else if (input.equals("d")) {
+				System.out.print("\tWARNING: draw will terminate the program after drawing. Proceed: (y)es, (n)o? ");
+				String yesOrNo = "yesOrNo";
+				yesOrNo = s.next();
+				if (yesOrNo.equals("y")) {
+					t.convert();
+					TreeDrawer td = new TreeDrawer(t.llrbt);
+					td.draw();
+				}
+			}
+		}
+	}
+
 	public static void testBasicInsertion() {
 		System.out.println("testBasicInsertion");
 		TwoThreeTree t = new TwoThreeTree("M");
@@ -192,8 +248,9 @@ public class TwoThreeTree {
 	}
 
 	public static void main(String[] args) {
-		testBasicInsertion();
-		testBasicConversion();
-		testDraw();
+		// testBasicInsertion();
+		// testBasicConversion();
+		// testDraw();
+		userInput();
 	}
 }
